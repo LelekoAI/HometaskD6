@@ -1,0 +1,42 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Newslist
+{% endblock title %}
+
+{% block content %}
+   <h1>Все новости и статьи</h1>
+   <h2>{{ newslist|length }}</h2>
+   <h3>{{ time_now|date:'M d Y' }}</h3>
+   <!-- Если в переменной next_sale будет None,
+   то выведется указанный в фильтре текст -->
+   <h3> {{ next_news|default_if_none:"чуть позже будет больше новостей" }} </h3>
+
+   <hr>
+   {% if newslist %}
+       <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Содержание</td>
+               <td>Автор</td>
+               <td>Рейтинг</td>
+           </tr>
+
+           {% for news in newslist %}
+           <tr>
+               <td>{{ news.header|censor }}</td>
+               <td>{{ news.creation_time|date:'M d Y' }}</td>
+               <td>{{ news.content|censor|truncatechars:20 }}</td>
+               <td>{{ news.creator }}</td>
+               <td>{{ news.rating }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Новостей нет!</h2>
+   {% endif %}
+{% endblock content %}
